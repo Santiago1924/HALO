@@ -1,44 +1,52 @@
 <?php
-// registrar.php (procesa el registro)
+// registrarse.php (procesa el registro)
 require_once("database/conexion.php");
+
 $db = new Database;
 $con = $db->conectar();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Captura solo lo que viene del formulario
+
+    // Captura y sanitiza los datos del formulario
     $username = trim($_POST['usuario']);
     $email = trim($_POST['email']);
     $password = password_hash($_POST['clave'], PASSWORD_BCRYPT);
 
-    // Valores fijos
+    // Valores fijos según tu DB
     $rol = 2;      // Siempre "Jugador"
-    $avatar = 1;   // Avatar por defecto
+    $avatar = 3;   // Avatar por defecto (ya insertado)
     $status = 1;   // Activo
     $level = 1;    // Nivel inicial
-    $points = 0;
+    $points = 0;   // Puntos iniciales
 
-    $sql = "INSERT INTO users (username, email, password, id_rol, id_avatar, points, level_id, last_login, id_status) 
-            VALUES (:usuario, :email, :clave, :rol, :avatar, :points, :level, NOW(), :status)";
-    $stmt = $con->prepare($sql);
-    $stmt->bindParam(':usuario', $username);
-    $stmt->bindParam(':email', $email);
-    $stmt->bindParam(':clave', $password);
-    $stmt->bindParam(':rol', $rol);
-    $stmt->bindParam(':avatar', $avatar);
-    $stmt->bindParam(':points', $points);
-    $stmt->bindParam(':level', $level);
-    $stmt->bindParam(':status', $status);
+    try {
+        $sql = "INSERT INTO users 
+                (username, email, password, id_rol, id_avatar, points, level_id, last_login, id_status) 
+                VALUES 
+                (:username, :email, :password, :rol, :avatar, :points, :level, NOW(), :status)";
+        
+        $stmt = $con->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':rol', $rol);
+        $stmt->bindParam(':avatar', $avatar);
+        $stmt->bindParam(':points', $points);
+        $stmt->bindParam(':level', $level);
+        $stmt->bindParam(':status', $status);
 
-    if ($stmt->execute()) {
-        header("Location: index.php?success=1");
-        exit;
-    } else {
-        echo "Error al registrar usuario.";
+        if ($stmt->execute()) {
+            // Redirige al login con mensaje de éxito
+            header("Location: index.php?success=1");
+            exit;
+        } else {
+            echo "Error al registrar usuario.";
+        }
+    } catch (PDOException $e) {
+        echo "Error en la base de datos: " . $e->getMessage();
     }
 }
 ?>
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -50,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   <div class="container-fluid h-100">
     <div class="row h-100">
+
       <div class="col-md-6 d-flex flex-column justify-content-center align-items-center text-light p-5 position-relative">
         <video autoplay muted loop class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; z-index: -1;">
           <source src="video/intro.mp4" type="video/mp4">
@@ -61,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           <h2 class="fw-bold text-dark mb-4">Crear cuenta</h2>
           <p class="text-muted">¿Ya tienes cuenta? <a href="index.php" class="text-decoration-none">Inicia sesión aquí</a></p>
 
-          <form method="POST" action="registrarse.php" autocomplete="off">
+          <form method="POST" action="inicio" autocomplete="off">
             <div class="mb-3">
               <label for="usuario" class="form-label">Usuario</label>
               <input type="text" class="form-control" id="usuario" name="usuario" required>
@@ -81,6 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           </form>
         </div>
       </div>
+
     </div>
   </div>
 

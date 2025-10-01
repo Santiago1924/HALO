@@ -27,13 +27,13 @@
 
           <form method="POST" action="controller/inicio.php" autocomplete="off">
             <div class="mb-3">
-              <label for="usuario" class="form-label">Usuario</label>
-              <input type="text" class="form-control" id="usuario" name="usuario" placeholder="Ingresa tu usuario">
+              <label for="users" class="form-label">Usuario</label>
+              <input type="text" class="form-control" id="users" name="usuario" placeholder="Ingresa tu usuario">
             </div>
 
             <div class="mb-3">
               <label for="password" class="form-label">Contraseña</label>
-              <input type="password" class="form-control" id="password" name="clave" placeholder="Ingresa tu contraseña">
+              <input type="password" class="form-control" id="password" name="contrasena" placeholder="Ingresa tu contraseña">
             </div>
 
             <button type="submit" class="btn btn-success w-100 mb-3">Entrar</button>

@@ -1,0 +1,62 @@
+body {
+  background: url('../images/lobby_bg.jpg') no-repeat center center/cover;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.menu {
+  position: absolute;
+  top: 20%;
+  left: 5%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.menu-btn {
+  background: #00c8ff;
+  color: #000;
+  padding: 15px 40px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.5rem;
+  border-radius: 10px;
+  transition: 0.3s;
+}
+
+.menu-btn:hover {
+  background: #0099cc;
+  transform: scale(1.05);
+}
+
+.avatar-container {
+  position: relative;
+}
+
+.avatar {
+  height: 500px;
+}
+
+.play-container {
+  position: absolute;
+  bottom: 10%;
+  right: 10%;
+}
+
+.play-btn {
+  background: #00c8ff;
+  padding: 15px 40px;
+  font-size: 1.3rem;
+  border: none;
+  border-radius: 30px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.play-btn:hover {
+  background: #0099cc;
+  transform: scale(1.1);
+}
