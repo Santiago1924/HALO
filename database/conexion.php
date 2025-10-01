@@ -3,7 +3,7 @@ class Database
 {
     // parametros de configuracion
     private $hostname = "127.0.0.1";
-    private $database = "";
+    private $database = "halo_style";
     private $username = "root";
     private $password = "";
     private $charset  = "utf8";

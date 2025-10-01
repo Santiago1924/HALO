@@ -17,14 +17,11 @@
           <source src="video/intro.mp4" type="video/mp4">
           Tu navegador no soporta videos HTML5.
         </video>
-
-
       </div>
 
       <!-- Derecha con login -->
       <div class="col-md-6 d-flex flex-column justify-content-center align-items-center bg-light">
         <div class="w-75">
-
           <h2 class="fw-bold text-dark mb-4">Inicio de Sesión</h2>
           <p class="text-muted">¿No tienes cuenta? <a href="#" class="text-decoration-none">Regístrate aquí</a></p>
 
@@ -41,7 +38,9 @@
 
             <button type="submit" class="btn btn-success w-100 mb-3">Entrar</button>
 
-            <button type="button" class="btn btn-outline-secondary w-100">Iniciar con Google</button>
+            <div class="mt-3">
+              <a href="registrarse.php" class="text-decoration-none">Registrarse</a>
+            </div>
 
             <div class="mt-3">
               <a href="#" class="text-decoration-none">¿Olvidaste tu contraseña?</a>
@@ -52,6 +51,20 @@
 
     </div>
   </div>
+
+  <!-- Audio de fondo -->
+  <audio id="bg-music" autoplay loop>
+    <source src="audio/intro.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <!-- Script para habilitar autoplay tras interacción -->
+  <script>
+    document.addEventListener("click", () => {
+      const audio = document.getElementById("bg-music");
+      audio.play().catch(err => console.log("Autoplay bloqueado:", err));
+    });
+  </script>
 
   <!-- Bootstrap JS local -->
   <script src="controller/bootstrap/js/bootstrap.bundle.min.js"></script>
