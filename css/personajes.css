@@ -1,0 +1,315 @@
+/* 🎮 Fondo general con estilo Halo (fallback color incluido) */
+.background {
+  background-color: #040406; /* fallback */
+  background-image: url("../img/personajes/body_personajes.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Overlay sutil para mejorar legibilidad */
+.background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.75) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 🧭 Título principal */
+.titulo {
+  z-index: 2;
+  text-align: center;
+  font-size: 2.8rem;
+  margin-top: 40px;
+  margin-bottom: 25px;
+  color: #980517;
+  text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
+  letter-spacing: 2px;
+}
+
+/* 🔙 Botón volver (soporta .top-left) */
+.volver-container {
+  z-index: 3;
+  margin-top: 40px;
+  display: block;
+}
+
+/* posición absoluta si se usa top-left */
+.volver-container.top-left {
+  position: absolute;
+  top: 18px;
+  left: 18px;
+  margin-top: 0;
+}
+
+.volver-btn {
+  background: rgba(0,0,0,0.85);
+  color: #ff0000;
+  padding: 10px 22px;
+  border-radius: 22px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 6px 18px rgba(0, 255, 255, 0.12);
+  transition: background 0.25s ease, transform 0.25s ease, color 0.25s ease;
+  display: inline-block;
+}
+
+.volver-btn:hover,
+.volver-btn:focus {
+  background: #ff0000;
+  color: #fff;
+  transform: scale(1.08);
+  outline: none;
+}
+
+/* ---------------------------------- */
+/* 🌀 CARRUSEL DE PERSONAJES */
+/* ---------------------------------- */
+.character-slider {
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-top: 30px;
+  position: relative;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+/* Viewport: ventana visible del carrusel (centrado) */
+.slider-viewport {
+  width: 980px;
+  max-width: calc(100% - 120px);
+  overflow: hidden;
+  position: relative;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+/* 🎭 Contenedor deslizable de tarjetas */
+.avatars-container {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: stretch;
+  gap: 30px;
+  padding: 20px 10px;
+  width: max-content;
+  min-width: 100%;
+  transition: transform 0.4s ease-in-out;
+  will-change: transform;
+  z-index: 1;
+}
+
+/* 💠 Tarjeta de personaje */
+.character-card {
+  background: rgba(0, 0, 0, 0.72);
+  border-radius: 15px;
+  border: 2px solid transparent;
+  padding: 18px;
+  width: 280px;
+  min-width: 280px;
+  height: 440px;
+  box-sizing: border-box;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  opacity: 0.96;
+  transform: translateY(0);
+  cursor: pointer;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden; /* evita salidas */
+  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+}
+
+.character-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  box-shadow: 0 12px 40px rgba(0, 255, 255, 0.08);
+  border-color: rgba(255, 0, 0, 0.45);
+  opacity: 1;
+}
+
+/* 🟢 Seleccionada: efecto glow animado (pseudo-elemento) */
+.character-card.selected {
+  z-index: 4; /* que destaque sobre las demás */
+  transform: translateY(-10px) scale(1.04);
+}
+
+.character-card.selected::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 15px;
+  pointer-events: none;
+  box-shadow: 0 0 28px 6px rgba(255,0,0,0.15), inset 0 0 40px 2px rgba(0,255,255,0.03);
+  animation: pulseGlow 2.8s infinite;
+}
+
+/* animación sutil */
+@keyframes pulseGlow {
+  0%   { transform: scale(1); opacity: 0.65; }
+  50%  { transform: scale(1.02); opacity: 1; }
+  100% { transform: scale(1); opacity: 0.65; }
+}
+
+/* 📦 Contenedor de la imagen (controla overflow) */
+.weapon-img-container,
+.character-card .weapon-img-container {
+  width: 100%;
+  height: 240px; /* altura fija para uniformidad */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden; /* ¡crucial! */
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));
+  box-shadow: inset 0 -10px 20px rgba(0,0,0,0.4);
+}
+
+/* 🖼 Imagen del personaje (ajustada para no salir) */
+.weapon-img,
+.character-card img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  display: block;
+  margin: 0 auto;
+  transition: transform 0.25s ease;
+}
+
+/* zoom sutil al hover */
+.character-card:hover .weapon-img,
+.character-card:hover img {
+  transform: scale(1.05);
+}
+
+/* 🧾 Nombre y descripción */
+.character-card h3 {
+  color: #ff2a2a;
+  margin: 10px 0 4px;
+  font-size: 1.25rem;
+  letter-spacing: 1px;
+  z-index: 2;
+}
+
+.character-card p {
+  color: #d0d0d0;
+  font-size: 0.95rem;
+  margin: 6px 0 12px;
+  line-height: 1.3;
+  z-index: 2;
+  flex-grow: 1;
+  text-align: center;
+  padding: 0 6px;
+}
+
+/* 🔘 Botón Seleccionar */
+.select-btn {
+  background: linear-gradient(135deg, #ff0000, #220000);
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  margin: 6px auto 0;
+  transition: background 0.25s ease, transform 0.18s ease;
+  z-index: 2;
+}
+
+.select-btn:hover,
+.select-btn:focus {
+  background: linear-gradient(135deg, #ff0000, #00aaff);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* ---------------------------------- */
+/* ⬅️➡️ Flechas del carrusel */
+/* ---------------------------------- */
+.slider-btn {
+  z-index: 5;
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid rgba(255, 0, 0, 0.85);
+  color: #ff0000;
+  font-size: 34px;
+  padding: 10px 14px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  border-radius: 50%;
+  user-select: none;
+  transition: background-color 0.2s, color 0.2s, transform 0.12s;
+}
+
+.slider-btn:hover { transform: translateY(-50%) scale(1.04); }
+
+.slider-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  border-color: #555;
+  color: #555;
+}
+
+/* Ubicación más estable de las flechas (responsiva) */
+.prev-btn { left: 12px; }
+.next-btn { right: 12px; }
+
+/* ---------------------------------- */
+/* 📱 Responsividad */
+/* ---------------------------------- */
+@media (min-width: 1600px) {
+  .slider-viewport { width: 1200px; }
+  .character-card { width: 320px; min-width: 320px; height: 480px; }
+  .weapon-img-container { height: 260px; }
+}
+
+@media (max-width: 1100px) {
+  .slider-viewport { width: 720px; }
+  .character-card { width: 300px; min-width: 300px; height: 460px; }
+  .avatars-container { gap: 22px; padding: 16px; }
+  .prev-btn { left: 10px; }
+  .next-btn { right: 10px; }
+}
+
+@media (max-width: 768px) {
+  .slider-viewport { width: calc(100% - 40px); max-width: 380px; }
+  .character-card { width: 320px; min-width: 320px; height: 520px; }
+  .weapon-img-container { height: 300px; }
+  .titulo { font-size: 2rem; margin-top: 20px; }
+  .volver-container.top-left { top: 8px; left: 8px; }
+  .slider-btn { width: 44px; height: 44px; font-size: 28px; }
+}
+
+/* Accesibilidad: foco visible */
+.select-btn:focus,
+.slider-btn:focus,
+.volver-btn:focus {
+  outline: 3px solid rgba(0,255,255,0.18);
+  outline-offset: 3px;
+}
+
+/* Ajustes finales para evitar que elementos background cubran tarjetas */
+.character-slider,
+.slider-viewport,
+.avatars-container,
+.character-card {
+  position: relative;
+}

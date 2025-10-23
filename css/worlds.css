@@ -1,0 +1,167 @@
+/* 🎮 Fondo general tipo Halo */
+.background {
+  background-color: #040406;
+  background-image: url("../img/armas/body_weapons.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* Overlay para contraste */
+.background::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.7) 70%, rgba(0,0,0,0.85) 100%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 🧭 Título principal */
+.titulo {
+  z-index: 2;
+  text-align: center;
+  font-size: 2.8rem;
+  margin-top: 60px;
+  margin-bottom: 40px;
+  color: #ff0000;
+  text-shadow: 0 0 18px rgba(0, 255, 255, 0.5);
+  letter-spacing: 2px;
+}
+
+/* 🔙 Botón volver */
+.volver-container {
+  z-index: 3;
+  margin-top: 40px;
+  display: block;
+  position: absolute;
+  top: 18px;
+  left: 18px;
+}
+
+.volver-btn {
+  background: rgba(0,0,0,0.85);
+  color: #ff0000;
+  padding: 10px 22px;
+  border-radius: 22px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 6px 18px rgba(0, 255, 255, 0.12);
+  transition: background 0.25s ease, transform 0.25s ease, color 0.25s ease;
+  display: inline-block;
+}
+
+.volver-btn:hover,
+.volver-btn:focus {
+  background: #ff0000;
+  color: #fff;
+  transform: scale(1.08);
+  outline: none;
+}
+
+/* 🌍 Contenedor principal de mapas */
+.worlds-container {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  gap: 40px;
+  margin: 50px auto 80px;
+  flex-wrap: nowrap;
+  z-index: 2;
+  position: relative;
+}
+
+/* 🌌 Tarjeta de cada mapa */
+.world-card {
+  flex: 0 0 300px;
+  background: rgba(0, 0, 0, 0.78);
+  border-radius: 18px;
+  border: 2px solid transparent;
+  padding: 18px;
+  text-align: center;
+  box-shadow: 0 8px 35px rgba(0, 0, 0, 0.6);
+  transition: all 0.3s ease-in-out;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.world-card:hover {
+  transform: translateY(-10px) scale(1.03);
+  border-color: rgba(255, 0, 0, 0.55);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.25);
+}
+
+/* 💫 Imagen del mapa */
+.world-img-container {
+  width: 100%;
+  height: 200px;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 15px;
+  background: rgba(255,255,255,0.04);
+  box-shadow: inset 0 -10px 25px rgba(0,0,0,0.6);
+}
+
+.world-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.world-card:hover .world-img {
+  transform: scale(1.1);
+}
+
+/* 🧭 Nombre del mapa */
+.world-card h3 {
+  color: #ff2a2a;
+  text-transform: uppercase;
+  margin-top: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  text-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+}
+
+/* 🚀 Botón de acción */
+.select-btn {
+  background: linear-gradient(135deg, #ff0000, #000000);
+  color: #ffffff;
+  padding: 8px 18px;
+  border: none;
+  border-radius: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 12px;
+  transition: all 0.25s ease-in-out;
+  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+}
+
+.select-btn:hover {
+  background: linear-gradient(135deg, #ff0000, #00ffff);
+  transform: translateY(-3px) scale(1.04);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
+}
+
+/* 📱 Responsividad */
+@media (max-width: 992px) {
+  .worlds-container {
+    flex-wrap: wrap;
+    gap: 25px;
+  }
+
+  .world-card {
+    width: 90%;
+    max-width: 360px;
+  }
+}

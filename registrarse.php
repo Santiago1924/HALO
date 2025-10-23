@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = password_hash($_POST['clave'], PASSWORD_BCRYPT);
 
     $rol = 2;       // Rol por defecto
-    $avatar = 3;    // Avatar por defecto 
+    $avatar = 1;    // Avatar por defecto 
     $status = 1;    // Activo
     $level = 1;     // Nivel inicial
     $points = 0;    // Puntos iniciales

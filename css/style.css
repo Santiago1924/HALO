@@ -10,7 +10,7 @@ body.halo-lobby {
 .menu-left {
   width: 20%;
   background: rgba(0, 0, 0, 0.6);
-  padding-left: 3rem;
+  padding-left: 2rem;
 }
 .menu-item {
   display: block;
@@ -87,4 +87,3 @@ body.halo-bg {
   from { opacity: 0; transform: scale(0.95); }
   to { opacity: 1; transform: scale(1); }
 }
-    

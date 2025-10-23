@@ -5,10 +5,89 @@ if (!isset($_SESSION['usuario'])) {
   exit();
 }
 
+// 📡 Conexión a la base de datos
+$conexion = new mysqli("localhost", "root", "", "halo_style");
+if ($conexion->connect_error) {
+  die("Error de conexión: " . $conexion->connect_error);
+}
+
 $username = $_SESSION['usuario'] ?? 'Spartan';
 
-// 🪖 Nivel actual del jugador (ejemplo: 3) - Esto luego lo traes de tu BD
-$nivel = 3;
+// 🧠 Obtener datos del usuario
+$stmt = $conexion->prepare("
+  SELECT u.id_user, u.points, u.level_id, l.name AS level_name, l.min_points
+  FROM users u
+  LEFT JOIN levels l ON u.level_id = l.level_id
+  WHERE u.username = ?
+");
+$stmt->bind_param("s", $username);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+$points = $user['points'] ?? 0;
+$currentLevelId = $user['level_id'] ?? 1;
+$currentLevelName = $user['level_name'] ?? "Recluta";
+
+// 📈 Verificar si el usuario debe subir de nivel
+$nextLevelQuery = $conexion->query("
+  SELECT level_id, name, min_points FROM levels 
+  WHERE min_points <= $points 
+  ORDER BY min_points DESC 
+  LIMIT 1
+");
+
+if ($nextLevelQuery && $nextLevelQuery->num_rows > 0) {
+  $levelData = $nextLevelQuery->fetch_assoc();
+
+  if ($levelData['level_id'] != $currentLevelId) {
+    $update = $conexion->prepare("UPDATE users SET level_id = ? WHERE username = ?");
+    $update->bind_param("is", $levelData['level_id'], $username);
+    $update->execute();
+
+    $currentLevelId = $levelData['level_id'];
+    $currentLevelName = $levelData['name'];
+  }
+}
+
+// 🏅 Imagen del rango según el nivel
+$rangoImagen = "../../img/rangos/bronce.png"; // valor por defecto
+if ($currentLevelId >= 2 && $currentLevelId < 4) {
+  $rangoImagen = "../../img/rangos/cabo.png";
+} elseif ($currentLevelId >= 4 && $currentLevelId < 6) {
+  $rangoImagen = "../../img/rangos/sargento.png";
+} elseif ($currentLevelId >= 6 && $currentLevelId < 8) {
+  $rangoImagen = "../../img/rangos/teniente.png";
+} elseif ($currentLevelId >= 8) {
+  $rangoImagen = "../../img/rangos/comandante.png";
+}
+
+// ⚙️ Obtener avatar del usuario
+$avatarImg = '../../img/personajes/117.png'; // por defecto
+$avatarName = 'Spartan';
+
+// Usamos PDO aquí para más flexibilidad (puedes mantener mysqli si prefieres)
+try {
+  $pdo = new PDO("mysql:host=localhost;dbname=halo_style;charset=utf8", "root", "");
+  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+  $stmt = $pdo->prepare("
+    SELECT a.image_url, a.name
+    FROM users u
+    LEFT JOIN avatars a ON u.id_avatar = a.id_avatar
+    WHERE u.username = ?
+  ");
+  $stmt->execute([$username]);
+  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  if ($row && !empty($row['image_url'])) {
+    // Aseguramos la ruta correcta relativa a model/user/
+    $avatarImg = "../../" . ltrim($row['image_url'], "./");
+    $avatarName = $row['name'] ?? $avatarName;
+  }
+} catch (PDOException $e) {
+  error_log("Error al obtener avatar: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -17,122 +96,76 @@ $nivel = 3;
   <meta charset="UTF-8">
   <title>Lobby | Halo Style</title>
   <link rel="stylesheet" href="../../controller/bootstrap/css/bootstrap.min.css">
-  <link rel="stylesheet" href="../../css/style.css">
-  <style>
-    body {
-      background: url("../../img/lobby.jpeg") no-repeat center center fixed;
-      background-size: cover;
-      color: #fff;
-    }
-    .spartan-img {
-      margin-top: 60px;
-      width: 200px;
-      height: 500px;
-    }
-    .user-rank {
-      text-align: center;
-      margin-bottom: 30px;
-      padding: 15px;
-      background: rgba(0, 0, 0, 0.6);
-      border-radius: 12px;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.4);
-    }
-    .locked {
-      background-color: rgba(255, 0, 0, 0.2);
-      border: 1px dashed #ff4d4d;
-      cursor: not-allowed;
-    }
-    .locked:hover {
-      background-color: rgba(255, 0, 0, 0.3);
-    }
-    .locked-text {
-      font-size: 0.85rem;
-      color: #ff4d4d;
-    }
-  </style>
+  <link rel="stylesheet" href="../../css/stile.css">
 </head>
-<body class="text-light halo-bg">
+<body class="halo-bg">
 
-<div class="container-fluid h-100">
-  <div class="row h-100">
+  <div class="container-fluid vh-100 d-flex align-items-center">
+    <div class="row w-100 align-items-stretch">
 
-    <!-- COLUMNA IZQUIERDA - Carrusel + Botones -->
-    <div class="col-md-4 d-flex flex-column justify-content-center align-items-center">
-      <div id="haloCarousel" class="carousel slide w-100 mb-4" data-bs-ride="carousel">
-        <div class="carousel-inner rounded shadow">
-          <div class="carousel-item active">
-            <img src="../../img/RECHARGE.jpeg" class="d-block w-100" alt="RECHARGE">
+      <!-- 🧭 COLUMNA IZQUIERDA -->
+      <div class="col-md-4 d-flex flex-column">
+        <div class="column-box d-flex flex-column justify-content-between h-100">
+
+          <!-- 🌀 Carrusel -->
+          <div id="haloCarousel" class="carousel slide w-100 mb-4" data-bs-ride="carousel">
+            <div class="carousel-inner">
+              <div class="carousel-item active">
+                <img src="../../img/mapas/LIVE_FIRE.jpeg" class="d-block w-100" alt="LIVE_FIRE">
+              </div>
+              <div class="carousel-item">
+                <img src="../../img/mapas/RECHARGE.jpeg" class="d-block w-100" alt="RECHARGE">
+              </div>
+              <div class="carousel-item">
+                <img src="../../img/mapas/BREAKER.jpeg" class="d-block w-100" alt="BREAKER">
+              </div>
+            </div>
           </div>
-          <div class="carousel-item">
-            <img src="../../img/BREAKER.jpeg" class="d-block w-100" alt="BREAKER">
+
+          <!-- 📁 Menú de navegación -->
+          <div class="menu-left text-start mt-auto w-100">
+            <button class="btn btn-outline-success nav-btn w-100 mb-3" onclick="window.location.href='partidas.php'">Partidas</button>
+            <button class="btn btn-outline-warning nav-btn w-100 mb-3" onclick="window.location.href='weapons.php'">Armas</button>
+            <button class="btn btn-outline-info nav-btn w-100" onclick="window.location.href='avatars.php'">Personajes</button>
           </div>
-          <div class="carousel-item">
-            <img src="../../img/LIVE_FIRE.jpeg" class="d-block w-100" alt="LIVE_FIRE">
-          </div>
+
         </div>
       </div>
 
-      <!-- Botones de menú con niveles requeridos -->
-      <div class="menu-left text-start w-100">
-
-        <!-- ✅ Siempre desbloqueado -->
-        <button class="btn btn-outline-light w-100 text-start mb-2">RECHARGE</button>
-
-        <!-- 🔐 BREAKER requiere nivel 5 -->
-        <?php if ($nivel >= 5): ?>
-          <button class="btn btn-outline-light w-100 text-start mb-2">BREAKER</button>
-        <?php else: ?>
-          <button class="btn btn-outline-light w-100 text-start mb-2 locked" disabled>
-            🔒 BREAKER
-            <div class="locked-text">Requiere nivel 5</div>
-          </button>
-        <?php endif; ?>
-
-        <!-- 🔐 LIVE_FIRE requiere nivel 10 -->
-        <?php if ($nivel >= 10): ?>
-          <button class="btn btn-outline-light w-100 text-start">LIVE_FIRE</button>
-        <?php else: ?>
-          <button class="btn btn-outline-light w-100 text-start locked" disabled>
-            🔒 LIVE_FIRE
-            <div class="locked-text">Requiere nivel 10</div>
-          </button>
-        <?php endif; ?>
-
-      </div>
-    </div>
-
-    <!-- COLUMNA CENTRAL - Spartan -->
-    <div class="col-md-4 d-flex flex-column justify-content-center align-items-center position-relative text-center">
-      <img src="../../img/117.png" alt="Spartan" class="spartan-img img-fluid">
-      <p class="text-muted mt-3">¡Prepárate para la batalla, soldado!</p>
-    </div>
-
-    <!-- COLUMNA DERECHA - Usuario + Desafíos -->
-    <div class="col-md-4 d-flex flex-column justify-content-center">
-      <div class="user-rank">
-        <h3 class="mb-1">Bienvenido, <span class="text-primary"><?= htmlspecialchars($username) ?></span></h3>
-        <p class="text-warning mb-0">Rango: Recluta</p>
-        <p class="text-info mb-0">Nivel actual: <?= $nivel ?></p>
+      <!-- 🪖 COLUMNA CENTRAL -->
+      <div class="col-md-4 d-flex flex-column">
+        <div class="column-box d-flex flex-column justify-content-center align-items-center text-center">
+          <img src="<?= htmlspecialchars($avatarImg) ?>" alt="<?= htmlspecialchars($avatarName) ?>" class="spartan-img img-fluid mb-3">
+          <p class="text-light fs-5">¡Prepárate para la batalla, <?= htmlspecialchars($avatarName) ?>!</p>
+        </div>
       </div>
 
-      <div class="challenge-panel p-4 bg-dark bg-opacity-75 rounded shadow-lg">
-        <h5 class="text-uppercase text-info mb-3">Desafíos Diarios</h5>
-        <ul class="list-group list-group-flush mb-4">
-          <li class="list-group-item bg-transparent text-light">🎯 Juega una partida</li>
-          <li class="list-group-item bg-transparent text-light">⚔️ Gana 1 partida</li>
-        </ul>
+      <!-- 📊 COLUMNA DERECHA -->
+      <div class="col-md-4 d-flex flex-column">
+        <div class="column-box d-flex flex-column justify-content-center align-items-center">
 
-        <h5 class="text-uppercase text-warning mb-3">Desafíos Semanales</h5>
-        <ul class="list-group list-group-flush">
-          <li class="list-group-item bg-transparent text-light">🏆 Completa 4 partidas</li>
-          <li class="list-group-item bg-transparent text-light">🔥 Gana 3 partidas</li>
-        </ul>
+          <div class="user-rank text-center">
+            <div class="mb-3">
+              <img src="<?= $rangoImagen ?>" alt="Rango" width="250" height="250">
+            </div>
+            <h3>Bienvenido, <span class="text-primary"><?= htmlspecialchars($username) ?></span></h3>
+            <p class="text-warning fs-5 mb-2">Rango: <?= htmlspecialchars($currentLevelName) ?></p>
+            <p class="text-info fs-5 mb-0">Puntos: <?= $points ?> | Nivel actual: <?= $currentLevelId ?></p>
+          </div>
+
+          <!-- 🎮 Botón JUGAR -->
+          <div class="play-btn-container mt-4">
+            <button class="play-btn" onclick="window.location.href='sala.php'">JUGAR</button>
+          </div>
+
+        </div>
       </div>
-    </div>
 
+    </div>
   </div>
-</div>
 
-<script src="../../controller/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="../../controller/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="script.js"></script>
+  
 </body>
 </html>

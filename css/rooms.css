@@ -1,0 +1,126 @@
+body.halo-bg {
+  background: url('../img/lobby.jpeg') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Orbitron', sans-serif;
+}
+
+h2 {
+  text-shadow: 0 0 15px #00ffcc;
+}
+
+.room-card {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid #00ff88;
+  border-radius: 15px;
+  text-align: center;
+  transition: transform 0.3s ease;
+  backdrop-filter: blur(8px);
+  box-shadow: 0 0 20px rgba(0, 255, 136, 0.4);
+}
+
+.room-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(0, 255, 136, 0.7);
+}
+
+.room-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 0 15px rgba(0, 255, 136, 0.5);
+}
+
+.join-btn {
+  background: linear-gradient(135deg, #00ffcc, #007bff);
+  color: #fff;
+  padding: 10px 25px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin-top: 10px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.join-btn:hover {
+  background: linear-gradient(135deg, #00ffaa, #0066cc);
+  transform: scale(1.05);
+}
+
+.join-btn.full {
+  background: rgba(200, 0, 0, 0.6);
+  cursor: not-allowed;
+}
+body {
+  background: url('../img/bg_space.jpg') no-repeat center center fixed;
+  background-size: cover;
+}
+
+.top-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 30px;
+}
+
+.back-btn, 
+.logout-btn {
+  padding: 10px 20px;
+  border: none;
+  font-size: 1.1rem;
+  border-radius: 8px;
+  transition: 0.3s;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.back-btn {
+  background: #0d6efd;
+  color: white;
+}
+.back-btn:hover {
+  background: #0b5ed7;
+}
+
+.logout-btn {
+  background: #dc3545;
+  color: white;
+}
+.logout-btn:hover {
+  background: #bb2d3b;
+}
+
+.room-card {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 0 10px rgba(0,0,0,0.6);
+  transition: 0.3s;
+}
+.room-card:hover {
+  transform: translateY(-5px);
+}
+
+.room-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.join-btn {
+  background: #198754;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  transition: 0.3s;
+  font-size: 1.1rem;
+}
+.join-btn:hover {
+  background: #157347;
+}
+.join-btn.full {
+  background: #6c757d;
+  cursor: not-allowed;
+}
+

@@ -1,0 +1,198 @@
+/* 🎮 Estilo general del lobby */
+body {
+  background: url("../img/lobby.jpeg") no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* 📦 Columnas principales */
+.column-box {
+  background: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px rgba(0,255,255,0.3);
+  height: 100%;
+}
+
+/* 🌀 Carrusel */
+#haloCarousel img {
+  border-radius: 15px;
+  height: 250px;
+  object-fit: cover;
+  box-shadow: 0 0 15px rgba(0,0,0,0.8);
+}
+
+/* 📁 Menú lateral */
+.menu-left {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+
+.menu-left button {
+  font-size: 1.4rem;
+  font-weight: 600;
+  padding: 20px 25vh;        /* Tamaño más ancho */
+  height: 80px;
+  border-radius: 12px;
+  width: 100%;
+  margin-bottom: 20px;
+  transition: transform 0.3s;
+}
+
+.menu-left button:hover {
+  transform: translateX(8px) scale(1.03);
+}
+
+/* 🎮 Botones con efecto visual */
+.menu-left .nav-btn {
+  font-size: 1.4rem;
+  font-weight: bold;
+  padding: 20px;
+  height: 80px;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.menu-left .nav-btn:hover {
+  transform: translateX(8px) scale(1.03);
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.4);
+}
+
+/* 🪖 Imagen del Spartan */
+.spartan-img {
+  width: 250px;
+  height: 550px;
+  object-fit: contain;
+  transition: transform 0.3s ease-in-out;
+}
+
+.spartan-img:hover {
+  transform: scale(1.05);
+}
+
+/* 📊 Panel de usuario */
+.user-rank {
+  text-align: center;
+}
+
+h3 span {
+  font-weight: bold;
+}
+
+/* 🎮 BOTÓN JUGAR */
+.play-btn-container {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.play-btn {
+  background: linear-gradient(135deg, #00ffcc, #007bff);
+  color: #fff;
+  font-size: 1.8rem;
+  font-weight: bold;
+  padding: 18px 60px;
+  border: none;
+  border-radius: 15px;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.play-btn:hover {
+  transform: scale(1.08);
+  background: linear-gradient(135deg, #00ffaa, #0066cc);
+  box-shadow: 0 0 30px rgba(0, 255, 255, 0.8);
+}
+/* ==========================
+🎭 SECCIÓN DE AVATARES
+========================== */
+.avatar-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  padding: 40px 0;
+}
+
+.avatar-card {
+  background: rgba(0, 0, 0, 0.7);
+  border: 2px solid transparent;
+  border-radius: 15px;
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  width: 220px;
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+}
+
+.avatar-card:hover {
+  transform: scale(1.05);
+  border-color: #00ffff;
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+}
+
+.avatar-card.selected {
+  border-color: #00ff99;
+  box-shadow: 0 0 25px rgba(0, 255, 150, 0.7);
+}
+
+.avatar-card img {
+  width: 150px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #00ffff33;
+  margin-bottom: 10px;
+  transition: transform 0.3s ease;
+}
+
+.avatar-card:hover img {
+  transform: scale(1.08);
+}
+
+/* 🔠 Nombre y descripción del avatar */
+.avatar-card h5 {
+  font-size: 1.2rem;
+  color: #00ffff;
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.avatar-card p {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+/* 🎯 Botón volver */
+.btn-back {
+  background: linear-gradient(135deg, #00ffcc, #007bff);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 30px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+}
+
+.btn-back:hover {
+  transform: scale(1.05);
+  background: linear-gradient(135deg, #00ffaa, #0066cc);
+  box-shadow: 0 0 25px rgba(0, 255, 255, 0.8);
+}
+body {
+  background: url("../img/lobby.jpeg") no-repeat center center fixed;
+  background-size: cover;
+  color: #fff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+
+
+    
