@@ -38,7 +38,6 @@ $levelName = $user['level_name'] ?? "Recluta";
   <link rel="stylesheet" href="../../controller/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../css/worlds.css">
   <style>
-    /*  Efecto de bloqueo visual */
     .locked {
       filter: grayscale(100%) brightness(0.6);
       pointer-events: none;
@@ -64,19 +63,34 @@ $levelName = $user['level_name'] ?? "Recluta";
       color: #bbb;
       margin-top: 8px;
     }
+
+    .volver-btn {
+      background-color: #dc3545;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: bold;
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    .volver-btn:hover {
+      background-color: #b52a35;
+    }
   </style>
 </head>
 <body class="background">
 
-  <!--  BOTONES SUPERIORES -->
+  <!-- BOTÓN VOLVER -->
   <div class="volver-container top-left">
     <a href="lobby.php" class="volver-btn">⬅️ Volver al Lobby</a>
   </div>
 
-  <!--  Título -->
+  <!-- TÍTULO -->
   <h1 class="titulo">🌌 Salas disponibles, <?php echo htmlspecialchars($username); ?> (<?php echo $levelName; ?>)</h1>
 
-  <!--  Tarjetas de Mapas -->
+  <!-- TARJETAS DE MAPAS -->
   <div class="worlds-container">
     <?php
     $query = "SELECT id_world, name, image, required_level FROM worlds ORDER BY id_world ASC";
@@ -94,9 +108,9 @@ $levelName = $user['level_name'] ?? "Recluta";
         <h3><?php echo htmlspecialchars($world['name']); ?></h3>
 
         <?php if (!$bloqueado) { ?>
-          <form action="../../controller/join_world.php" method="POST">
+          <!-- ✅ Redirige a waiting_room.php -->
+          <form action="waiting_room.php" method="GET">
             <input type="hidden" name="world_id" value="<?php echo $world['id_world']; ?>">
-            <input type="hidden" name="id_user" value="<?php echo $id_user; ?>">
             <button type="submit" class="select-btn">🚀 Entrar</button>
           </form>
         <?php } else { ?>
