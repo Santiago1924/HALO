@@ -1,4 +1,14 @@
+
+
+
+
 <?php
+
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
+header("Expires: 0");
+
 if (session_status() == PHP_SESSION_NONE) {
   session_start();
 }
@@ -60,5 +70,12 @@ if (isset($_SESSION['login_error'])) {
   </div>
 
   <script src="controller/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script>
+window.history.pushState(null, "", window.location.href);
+window.onpopstate = function () {
+    window.location.href = window.location.href;
+};
+</script>
+
 </body>
 </html>

@@ -1,0 +1,52 @@
+body {
+  background: rgba(0,0,0,0.85);
+  color: white;
+  min-height: 100vh;
+}
+.world-card {
+  background: rgba(0,0,0,0.85);
+  padding: 15px;
+  border-radius: 10px;
+  text-align: center;
+  margin: 15px;
+  transition: .3s;
+}
+.world-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 15px #00bcd4;
+}
+.locked {
+  filter: grayscale(100%) brightness(.5);
+  pointer-events: none;
+  position: relative;
+}
+.locked::after {
+  content: "Nivel requerido";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  background: rgba(0,0,0,.8);
+  padding: 8px 15px;
+  border-radius: 8px;
+  color: #ff4444;
+  font-weight: bold;
+}
+.select-btn {
+  background: #00bcd4;
+  border: none;
+  padding: 8px 18px;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.back-btn {
+  position: absolute;
+  top: 10px;
+  left: 1400px;
+  background: linear-gradient(90deg, #00bcd4, #005f73);
+  color: white;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-weight: bold;
+  text-decoration: none;
+}

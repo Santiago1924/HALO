@@ -1,138 +1,189 @@
 <?php
-session_start();
-if (!isset($_SESSION['usuario'])) {
-  header("Location: ../index.php");
-  exit();
-}
+require_once("../../controller/validar_sesion.php");
+require_once("../../database/conexion.php");
 
-// 📡 Conexión a la base de datos
-$conexion = new mysqli("localhost", "root", "", "halo_style");
-if ($conexion->connect_error) {
-  die("Error de conexión: " . $conexion->connect_error);
-}
+$db = new Database();
+$con = $db->conectar();
 
 $username = $_SESSION['usuario'] ?? 'Spartan';
+$id_user  = $_SESSION['id_user'] ?? 0;
 
-// 🧠 Obtener datos del usuario
-$stmt = $conexion->prepare("
-  SELECT u.id_user, u.points, u.level_id, l.name AS level_name, l.min_points
-  FROM users u
-  LEFT JOIN levels l ON u.level_id = l.level_id
-  WHERE u.username = ?
-");
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-$points = $user['points'] ?? 0;
-$currentLevelId = $user['level_id'] ?? 1;
-$currentLevelName = $user['level_name'] ?? "Recluta";
-
-// 📈 Verificar si el usuario debe subir de nivel
-$nextLevelQuery = $conexion->query("
-  SELECT level_id, name, min_points FROM levels 
-  WHERE min_points <= $points 
-  ORDER BY min_points DESC 
-  LIMIT 1
-");
-
-if ($nextLevelQuery && $nextLevelQuery->num_rows > 0) {
-  $levelData = $nextLevelQuery->fetch_assoc();
-
-  if ($levelData['level_id'] != $currentLevelId) {
-    $update = $conexion->prepare("UPDATE users SET level_id = ? WHERE username = ?");
-    $update->bind_param("is", $levelData['level_id'], $username);
-    $update->execute();
-
-    $currentLevelId = $levelData['level_id'];
-    $currentLevelName = $levelData['name'];
-  }
-}
-
-// 🏅 Imagen del rango según el nivel
-$rangoImagen = "../../img/rangos/bronce.png"; // valor por defecto
-if ($currentLevelId >= 2 && $currentLevelId < 4) {
-  $rangoImagen = "../../img/rangos/cabo.png";
-} elseif ($currentLevelId >= 4 && $currentLevelId < 6) {
-  $rangoImagen = "../../img/rangos/sargento.png";
-} elseif ($currentLevelId >= 6 && $currentLevelId < 8) {
-  $rangoImagen = "../../img/rangos/teniente.png";
-} elseif ($currentLevelId >= 8) {
-  $rangoImagen = "../../img/rangos/comandante.png";
-}
-
-// ⚙️ Obtener avatar del usuario
-$avatarImg = '../../img/personajes/117.png'; // por defecto
-$avatarName = 'Spartan';
-
-// Usamos PDO aquí para más flexibilidad (puedes mantener mysqli si prefieres)
+// ---------------- OBTENER INFO DEL USUARIO ----------------
 try {
-  $pdo = new PDO("mysql:host=localhost;dbname=halo_style;charset=utf8", "root", "");
-  $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+  $stmt = $con->prepare("
+    SELECT u.id_user, u.points, u.level_id, l.name AS level_name, l.min_points
+    FROM users u
+    LEFT JOIN levels l ON u.level_id = l.level_id
+    WHERE u.username = :username
+  ");
+  $stmt->execute(['username' => $username]);
+  $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
-  $stmt = $pdo->prepare("
+  $points = $user['points'] ?? 0;
+  $currentLevelId = $user['level_id'] ?? 1;
+  $currentLevelName = $user['level_name'] ?? "Recluta";
+
+  // Determinar si el usuario sube de nivel
+  $stmtNext = $con->prepare("
+    SELECT level_id, name, min_points FROM levels
+    WHERE min_points <= ?
+    ORDER BY min_points DESC
+    LIMIT 1
+  ");
+  $stmtNext->execute([$points]);
+  $next = $stmtNext->fetch(PDO::FETCH_ASSOC);
+
+  if ($next && $next['level_id'] != $currentLevelId) {
+    $update = $con->prepare("UPDATE users SET level_id = ? WHERE username = ?");
+    $update->execute([$next['level_id'], $username]);
+  }
+
+  // ✅ Re-consultar datos reales después de actualizar
+  $stmt = $con->prepare("
+    SELECT u.id_user, u.points, u.level_id, l.name AS level_name
+    FROM users u
+    LEFT JOIN levels l ON u.level_id = l.level_id
+    WHERE u.username = :username
+  ");
+  $stmt->execute(['username' => $username]);
+  $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+  $points = $user['points'];
+  $currentLevelId = $user['level_id'];
+  $currentLevelName = $user['level_name'];
+
+  // Imagen de rango según level_id
+  switch ($currentLevelId) {
+    case 1:
+      $rangoImagen = "../../img/rangos/1RECRUIT.png";
+      break;
+    case 2:
+      $rangoImagen = "../../img/rangos/2BRONZE.png";
+      break;
+    case 3:
+      $rangoImagen = "../../img/rangos/3SILVER.png";
+      break;
+    case 4:
+      $rangoImagen = "../../img/rangos/4GOLD.png";
+      break;
+    case 5:
+      $rangoImagen = "../../img/rangos/5PLATINIUM.png";
+      break;
+    case 6:
+      $rangoImagen = "../../img/rangos/6DIAMOND.png";
+      break;
+    case 7:
+      $rangoImagen = "../../img/rangos/7DIAMOND.png";
+      break;
+    case 8:
+      $rangoImagen = "../../img/rangos/8ONIX.png";
+      break;
+    case 9:
+      $rangoImagen = "../../img/rangos/9ONIX.png";
+      break;
+    case 10:
+    default:
+      $rangoImagen = "../../img/rangos/10HERO.png";
+      break;
+  }
+
+  // Avatar
+  $avatarImg = '../../img/personajes/117.png';
+  $avatarName = 'Spartan';
+
+  $stmtAvatar = $con->prepare("
     SELECT a.image_url, a.name
     FROM users u
     LEFT JOIN avatars a ON u.id_avatar = a.id_avatar
-    WHERE u.username = ?
+    WHERE u.username = :username
   ");
-  $stmt->execute([$username]);
-  $row = $stmt->fetch(PDO::FETCH_ASSOC);
+  $stmtAvatar->execute(['username' => $username]);
+  $row = $stmtAvatar->fetch(PDO::FETCH_ASSOC);
 
   if ($row && !empty($row['image_url'])) {
-    // Aseguramos la ruta correcta relativa a model/user/
     $avatarImg = "../../" . ltrim($row['image_url'], "./");
     $avatarName = $row['name'] ?? $avatarName;
   }
 } catch (PDOException $e) {
-  error_log("Error al obtener avatar: " . $e->getMessage());
+  error_log("Error en lobby.php: " . $e->getMessage());
 }
+
+// ---------------- VERIFICAR / ASIGNAR MUNDO ----------------
+$stmtUserWorld = $con->prepare("SELECT id_world FROM users WHERE id_user = ?");
+$stmtUserWorld->execute([$id_user]);
+$id_world = $stmtUserWorld->fetchColumn();
+
+if (!$id_world) {
+  $defaultWorld = 1; // 🌍 Berserker por defecto
+  $setWorld = $con->prepare("UPDATE users SET id_world = ? WHERE id_user = ?");
+  $setWorld->execute([$defaultWorld, $id_user]);
+  $id_world = $defaultWorld;
+}
+
+// Obtener datos del mundo
+$worldQuery = $con->prepare("
+  SELECT name AS world_name, image AS world_image
+  FROM worlds
+  WHERE id_world = ?
+");
+$worldQuery->execute([$id_world]);
+$worldData = $worldQuery->fetch(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Lobby | Halo Style</title>
   <link rel="stylesheet" href="../../controller/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../../css/stile.css">
-</head>
-<body class="halo-bg">
 
+  <style>
+    .back-btn {
+      position: absolute;
+      top: 10px;
+      left: 300px;
+      background: linear-gradient(90deg, #00bcd4, #005f73);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-weight: bold;
+      text-decoration: none;
+    }
+  </style>
+
+</head>
+
+<body class="halo-bg">
   <div class="container-fluid vh-100 d-flex align-items-center">
     <div class="row w-100 align-items-stretch">
 
-      <!-- 🧭 COLUMNA IZQUIERDA -->
+      <!-- Columna Izquierda -->
       <div class="col-md-4 d-flex flex-column">
         <div class="column-box d-flex flex-column justify-content-between h-100">
 
-          <!-- 🌀 Carrusel -->
-          <div id="haloCarousel" class="carousel slide w-100 mb-4" data-bs-ride="carousel">
-            <div class="carousel-inner">
-              <div class="carousel-item active">
-                <img src="../../img/mapas/LIVE_FIRE.jpeg" class="d-block w-100" alt="LIVE_FIRE">
-              </div>
-              <div class="carousel-item">
-                <img src="../../img/mapas/RECHARGE.jpeg" class="d-block w-100" alt="RECHARGE">
-              </div>
-              <div class="carousel-item">
-                <img src="../../img/mapas/BREAKER.jpeg" class="d-block w-100" alt="BREAKER">
-              </div>
+          <!-- 🌍 Mapa del mundo -->
+          <div class="w-100 mb-4">
+            <img src="../../<?= htmlspecialchars($worldData['world_image']) ?>"
+              class="d-block w-100 rounded"
+              alt="<?= htmlspecialchars($worldData['world_name']) ?>">
+
+            <div class="text-center mt-2 text-info fs-5">
+              Mundo: <?= htmlspecialchars($worldData['world_name']) ?>
             </div>
           </div>
 
-          <!-- 📁 Menú de navegación -->
+          <!-- Menu -->
           <div class="menu-left text-start mt-auto w-100">
             <button class="btn btn-outline-success nav-btn w-100 mb-3" onclick="window.location.href='partidas.php'">Partidas</button>
             <button class="btn btn-outline-warning nav-btn w-100 mb-3" onclick="window.location.href='weapons.php'">Armas</button>
             <button class="btn btn-outline-info nav-btn w-100" onclick="window.location.href='avatars.php'">Personajes</button>
           </div>
-
         </div>
       </div>
 
-      <!-- 🪖 COLUMNA CENTRAL -->
+      <!-- Columna Central -->
       <div class="col-md-4 d-flex flex-column">
         <div class="column-box d-flex flex-column justify-content-center align-items-center text-center">
           <img src="<?= htmlspecialchars($avatarImg) ?>" alt="<?= htmlspecialchars($avatarName) ?>" class="spartan-img img-fluid mb-3">
@@ -140,22 +191,27 @@ try {
         </div>
       </div>
 
-      <!-- 📊 COLUMNA DERECHA -->
+      <!-- Columna Derecha -->
       <div class="col-md-4 d-flex flex-column">
-        <div class="column-box d-flex flex-column justify-content-center align-items-center">
+        <div class="column-box position-relative d-flex flex-column justify-content-center align-items-center">
 
-          <div class="user-rank text-center">
+          <!-- Logout -->
+          <a href="../../controller/logout.php" class="back-btn">
+            CERRAR SESIÓN
+          </a>
+
+          <div class="user-rank text-center mt-3">
             <div class="mb-3">
-              <img src="<?= $rangoImagen ?>" alt="Rango" width="250" height="250">
+              <img src="<?= htmlspecialchars($rangoImagen) ?>" alt="Rango" width="250" height="250">
             </div>
             <h3>Bienvenido, <span class="text-primary"><?= htmlspecialchars($username) ?></span></h3>
             <p class="text-warning fs-5 mb-2">Rango: <?= htmlspecialchars($currentLevelName) ?></p>
-            <p class="text-info fs-5 mb-0">Puntos: <?= $points ?> | Nivel actual: <?= $currentLevelId ?></p>
+            <p class="text-info fs-5 mb-0">Puntos: <?= $points ?> </p>
           </div>
 
-          <!-- 🎮 Botón JUGAR -->
-          <div class="play-btn-container mt-4">
-            <button class="play-btn" onclick="window.location.href='sala.php'">JUGAR</button>
+          <!-- JUGAR -->
+          <div class="play-btn-container mt-3">
+            <button class="play-btn" onclick="window.location.href='select_world.php'">JUGAR</button>
           </div>
 
         </div>
@@ -165,7 +221,27 @@ try {
   </div>
 
   <script src="../../controller/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="script.js"></script>
-  
+  <audio id="lobbyMusic" autoplay loop>
+    <source src="../../audio/intro.mp3" type="audio/mpeg">
+    Tu navegador no soporta audio HTML5.
+  </audio>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const audio = document.getElementById("lobbyMusic");
+
+      // Asegura que el audio empiece apenas el DOM está listo
+      audio.volume = 0.4; // volumen moderado (40%)
+
+      // Si el navegador bloquea el autoplay, intentamos reproducirlo tras una interacción mínima
+      document.body.addEventListener('click', () => {
+        if (audio.paused) audio.play();
+      }, {
+        once: true
+      });
+    });
+  </script>
+
 </body>
+
 </html>

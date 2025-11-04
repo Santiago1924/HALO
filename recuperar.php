@@ -94,9 +94,7 @@ if (isset($_POST['validar'])) {
 
   <div class="card shadow-lg border-0 rounded-4 p-4" style="max-width: 400px; width: 100%;">
     <div class="text-center mb-3">
-      <img src="controller/image/logo.png" class="rounded-circle mb-3" alt="Logo" style="width: 100px; height: 100px; object-fit: cover;">
-      <h1 class="h5 fw-bold text-primary">Recuperar Contraseña</h1>
-    </div>
+      
 
     <form method="POST" autocomplete="off">
       <div class="mb-3">

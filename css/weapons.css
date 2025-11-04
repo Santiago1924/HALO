@@ -1,13 +1,13 @@
-/* 🎮 Fondo general con estilo Halo (fallback color incluido) */
+/* 🎮 Fondo general con estilo Halo mejorado */
 .background {
-  background-color: #040406; /* fallback */
+  background-color: #040406;
   background-image: url("../img/armas/body_weapons.png");
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
   min-height: 100vh;
-  font-family: 'Segoe UI', Tahoma, sans-serif;
+  font-family: 'Orbitron', 'Segoe UI', Tahoma, sans-serif;
   color: #fff;
   display: flex;
   flex-direction: column;
@@ -16,66 +16,111 @@
   overflow-x: hidden;
 }
 
-/* Overlay sutil para mejorar legibilidad */
 .background::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.6) 60%, rgba(0,0,0,0.75) 100%);
-  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(0,0,0,0.3), rgba(0,0,0,0.85) 70%);
   z-index: 0;
 }
 
-/* 🧭 Título principal */
-.titulo {
-  z-index: 2;
-  text-align: center;
-  font-size: 2.8rem;
-  margin-top: 40px;
-  margin-bottom: 25px;
-  color: #980517;
-  text-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
-  letter-spacing: 2px;
+/* 🔰 Navbar superior */
+.weapons-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(90deg, rgba(14,14,14,0.95), rgba(20,20,20,0.85));
+  padding: 12px 30px;
+  border-bottom: 2px solid #00b4ff;
+  box-shadow: 0 2px 10px rgba(0, 180, 255, 0.3);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
 }
 
-/* 🔙 Botón volver (soporta .top-left) */
-.volver-container {
-  z-index: 3;
-  margin-top: 40px;
-  display: block;
-}
-
-/* posición absoluta si se usa top-left */
-.volver-container.top-left {
-  position: absolute;
-  top: 18px;
-  left: 18px;
-  margin-top: 0;
-}
-
-.volver-btn {
-  background: rgba(0,0,0,0.85);
-  color: #ff0000;
-  padding: 10px 22px;
-  border-radius: 22px;
-  text-decoration: none;
-  font-weight: bold;
-  box-shadow: 0 6px 18px rgba(0, 255, 255, 0.12);
-  transition: background 0.25s ease, transform 0.25s ease, color 0.25s ease;
-  display: inline-block;
-}
-
-.volver-btn:hover,
-.volver-btn:focus {
-  background: #ff0000;
+.navbar-left .volver-btn {
+  background: #00b4ff;
   color: #fff;
-  transform: scale(1.08);
-  outline: none;
+  font-weight: bold;
+  text-decoration: none;
+  padding: 8px 15px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0,180,255,0.3);
 }
 
-/* ---------------------------------- */
-/* 🌀 CARRUSEL DE PERSONAJES */
-/* ---------------------------------- */
+.navbar-left .volver-btn:hover {
+  background: #0078a6;
+  transform: scale(1.05);
+}
+
+.navbar-center {
+  text-align: center;
+  color: #fff;
+}
+
+.navbar-center .titulo {
+  font-size: 1.8rem;
+  margin: 0;
+  text-shadow: 0 0 8px #00b4ff;
+}
+
+.navbar-center .subtitulo {
+  font-size: 1rem;
+  margin: 3px 0 0;
+  opacity: 0.85;
+}
+
+.navbar-center .nivel {
+  color: #00ff9d;
+  font-weight: bold;
+}
+
+.navbar-right .level-icon {
+  width: 45px;
+  height: 45px;
+  filter: drop-shadow(0 0 8px #00b4ff);
+}
+
+/* 🎯 Filtro */
+.filtro-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 35px 0 15px;
+  z-index: 3;
+  position: relative;
+  animation: fadeIn 1s ease forwards;
+}
+
+.filtro-label {
+  font-weight: bold;
+  font-size: 1.2rem;
+  color: #fff;
+  text-shadow: 0 0 10px cyan;
+}
+
+.form-select {
+  background: rgba(0,0,0,0.75);
+  color: cyan;
+  border: 2px solid cyan;
+  border-radius: 12px;
+  padding: 6px 14px;
+  font-weight: 600;
+  box-shadow: 0 0 10px rgba(0,255,255,0.2);
+  transition: 0.3s ease;
+}
+
+.form-select:hover {
+  border-color: #ff0000;
+  color: #ff0000;
+  box-shadow: 0 0 16px rgba(255, 0, 0, 0.4);
+  transform: scale(1.05);
+}
+
+/* 🎮 Carrusel principal */
 .character-slider {
   z-index: 2;
   display: flex;
@@ -83,325 +128,172 @@
   align-items: center;
   width: 100%;
   margin-top: 30px;
+  padding: 0 40px;
   position: relative;
-  padding: 0 20px;
-  box-sizing: border-box;
 }
 
-/* Viewport: ventana visible del carrusel (centrado) */
 .slider-viewport {
-  width: 980px;
-  max-width: calc(100% - 120px);
+  width: 100%;
+  max-width: 1200px;
   overflow: hidden;
+  display: flex;
+  justify-content: center;
   position: relative;
-  box-sizing: border-box;
-  margin: 0 auto;
 }
 
 .avatars-container {
   display: flex;
-  flex-wrap: nowrap;
+  gap: 40px;
   align-items: stretch;
-  gap: 30px;
-  padding: 20px 10px;
-  transition: transform 0.4s ease-in-out;
+  transition: transform 0.6s ease;
   will-change: transform;
-  z-index: 1;
-  width: max-content;
 }
 
-/* 🔹 Cada tarjeta ocupará 1/3 del viewport */
+/* 💫 Tarjetas de armas */
 .character-card {
-  flex: 0 0 calc(33.333% - 20px);
-  background: rgba(0, 0, 0, 0.72);
-  border-radius: 15px;
+  background: rgba(0,0,0,0.8);
   border: 2px solid transparent;
-  padding: 18px;
-  width: 280px;
-  min-width: 280px;
-  height: 440px;
-  box-sizing: border-box;
+  border-radius: 16px;
+  width: 320px;
+  min-height: 520px;
   text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  opacity: 0.96;
-  transform: translateY(0);
-  cursor: pointer;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+  transition: transform 0.4s ease, box-shadow 0.3s ease;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
-}
-
-
-/* 💠 Tarjeta de personaje */
-.character-card {
-  background: rgba(0, 0, 0, 0.72);
-  border-radius: 15px;
-  border: 2px solid transparent;
-  padding: 18px;
-  width: 280px;
-  min-width: 280px;
-  height: 440px;
-  box-sizing: border-box;
-  text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
-  opacity: 0.96;
-  transform: translateY(0);
-  cursor: pointer;
-  flex-shrink: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  position: relative;
-  overflow: hidden; /* evita salidas */
-  box-shadow: 0 8px 30px rgba(0,0,0,0.6);
+  opacity: 0;
+  animation: slideUp 0.8s ease forwards;
 }
 
 .character-card:hover {
-  transform: translateY(-10px) scale(1.03);
-  box-shadow: 0 12px 40px rgba(0, 255, 255, 0.08);
-  border-color: rgba(255, 0, 0, 0.45);
-  opacity: 1;
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 8px 20px rgba(0, 180, 255, 0.4);
+  border-color: rgba(0,255,255,0.4);
 }
 
-/* 🟢 Seleccionada: efecto glow animado (pseudo-elemento) */
-.character-card.selected {
-  z-index: 4; /* que destaque sobre las demás */
-  transform: translateY(-10px) scale(1.04);
-}
-
-.character-card.selected::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 15px;
-  pointer-events: none;
-  box-shadow: 0 0 28px 6px rgba(255,0,0,0.15), inset 0 0 40px 2px rgba(0,255,255,0.03);
-  animation: pulseGlow 2.8s infinite;
-}
-
-/* animación sutil */
-@keyframes pulseGlow {
-  0%   { transform: scale(1); opacity: 0.65; }
-  50%  { transform: scale(1.02); opacity: 1; }
-  100% { transform: scale(1); opacity: 0.65; }
-}
-
-/* 📦 Contenedor de la imagen (controla overflow) */
-.weapon-img-container,
-.character-card .weapon-img-container {
-  width: 100%;
-  height: 240px; /* altura fija para uniformidad */
+.weapon-img-container {
+  height: 240px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  overflow: hidden; /* ¡crucial! */
-  border-radius: 10px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.08));
-  box-shadow: inset 0 -10px 20px rgba(0,0,0,0.4);
+  align-items: center;
+  background: rgba(255,255,255,0.05);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-/* 🖼 Imagen del personaje (ajustada para no salir) */
-.weapon-img,
-.character-card img {
-  max-width: 100%;
-  max-height: 100%;
-  width: auto;
-  height: auto;
-  object-fit: contain;
-  display: block;
-  margin: 0 auto;
-  transition: transform 0.25s ease;
+.weapon-img {
+  max-width: 80%;
+  transition: transform 0.4s ease;
+  filter: drop-shadow(0 0 12px rgba(0,255,255,0.5));
 }
 
-/* zoom sutil al hover */
-.character-card:hover .weapon-img,
-.character-card:hover img {
-  transform: scale(1.05);
+.character-card:hover .weapon-img {
+  transform: scale(1.15) rotate(-1deg);
 }
 
-/* 🧾 Nombre y descripción */
+/* Títulos y texto */
 .character-card h3 {
   color: #ff2a2a;
-  margin: 10px 0 4px;
-  font-size: 1.25rem;
-  letter-spacing: 1px;
-  z-index: 2;
+  margin-top: 12px;
+  font-size: 1.3rem;
 }
 
 .character-card p {
   color: #d0d0d0;
-  font-size: 0.95rem;
-  margin: 6px 0 12px;
-  line-height: 1.3;
-  z-index: 2;
-  flex-grow: 1;
-  text-align: center;
-  padding: 0 6px;
+  margin: 6px 0;
 }
 
-/* 🎯 Botón seleccionar estilo Halo */
+/* ⚡ Botones de estado */
 .select-btn {
-  background: linear-gradient(135deg, #ff0000, #000000);
-  color: #ffffff;
-  padding: 8px 18px;
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 85%;
+  padding: 12px 20px;
   border: none;
   border-radius: 14px;
   font-weight: bold;
-  cursor: pointer;
-  margin: 12px auto 0;
-  display: block;
-  width: 80%;
-  max-width: 180px;
-  text-align: center;
-  transition: all 0.25s ease-in-out;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 1rem;
+  transition: all 0.35s ease;
+  cursor: default;
+  box-shadow: 0 0 12px rgba(0,0,0,0.6);
 }
 
-.select-btn:hover {
-  background: linear-gradient(135deg, #ff0000, #00ffff);
-  color: #fff;
-  transform: translateY(-3px) scale(1.04);
-  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-}
-
-/* Estado: disponible (igual al estilo de avatar) */
+/* 🟢 Arma disponible */
 .disponible {
-  background: linear-gradient(135deg, #ff0000, #220000);
-  color: #fff;
-  box-shadow: 0 0 15px rgba(255, 0, 0, 0.25);
+  background: linear-gradient(135deg, #00ffff, #007777);
+  color: #000;
+  box-shadow: 0 0 20px rgba(0,255,255,0.4);
+  animation: pulseCyan 2s infinite alternate;
 }
 
-/* Estado: bloqueado */
+/* 🔒 Arma bloqueada */
 .bloqueado {
-  background: linear-gradient(135deg, #222, #000);
-  color: #999;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
+  background: linear-gradient(135deg, #111, #333);
+  color: #888;
+  border: 1px solid rgba(255,255,255,0.1);
+  box-shadow: inset 0 0 10px rgba(255,255,255,0.05);
+  filter: grayscale(0.6);
 }
 
-
-.select-btn:hover,
-.select-btn:focus {
-  background: linear-gradient(135deg, #ff0000, #00aaff);
-  transform: translateY(-2px);
-  outline: none;
+/* ✨ Hover dinámico */
+.character-card:hover .disponible {
+  background: linear-gradient(135deg, #00ffcc, #004444);
+  box-shadow: 0 0 25px rgba(0,255,200,0.6);
+  transform: translateX(-50%) scale(1.05);
 }
 
-/* ---------------------------------- */
-/* ⬅️➡️ Flechas del carrusel */
-/* ---------------------------------- */
+.character-card:hover .bloqueado {
+  background: linear-gradient(135deg, #222, #111);
+  box-shadow: 0 0 20px rgba(255,0,0,0.3);
+  transform: translateX(-50%) scale(1.02);
+}
+
+/* 💫 Efecto respiración */
+@keyframes pulseCyan {
+  from { box-shadow: 0 0 12px rgba(0,255,255,0.4); }
+  to { box-shadow: 0 0 25px rgba(0,255,255,0.8); }
+}
+
+/* 🎮 Flechas */
 .slider-btn {
-  z-index: 5;
-  background: rgba(0, 0, 0, 0.7);
-  border: 2px solid rgba(255, 0, 0, 0.85);
-  color: #ff0000;
-  font-size: 34px;
-  padding: 10px 14px;
-  cursor: pointer;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
+  background: rgba(0,0,0,0.8);
+  border: 2px solid cyan;
+  color: cyan;
+  font-size: 28px;
   border-radius: 50%;
-  user-select: none;
-  transition: background-color 0.2s, color 0.2s, transform 0.12s;
-}
-
-.slider-btn:hover { transform: translateY(-50%) scale(1.04); }
-
-.slider-btn:disabled {
-  opacity: 0.3;
-  cursor: not-allowed;
-  border-color: #555;
-  color: #555;
-}
-
-/* Ubicación más estable de las flechas (responsiva) */
-.prev-btn { left: 12px; }
-.next-btn { right: 12px; }
-
-/* ---------------------------------- */
-/* 📱 Responsividad */
-/* ---------------------------------- */
-@media (min-width: 1600px) {
-  .slider-viewport { width: 1200px; }
-  .character-card { width: 320px; min-width: 320px; height: 480px; }
-  .weapon-img-container { height: 260px; }
-}
-
-@media (max-width: 1100px) {
-  .slider-viewport { width: 720px; }
-  .character-card { width: 300px; min-width: 300px; height: 460px; }
-  .avatars-container { gap: 22px; padding: 16px; }
-  .prev-btn { left: 10px; }
-  .next-btn { right: 10px; }
-}
-
-@media (max-width: 768px) {
-  .slider-viewport { width: calc(100% - 40px); max-width: 380px; }
-  .character-card { width: 320px; min-width: 320px; height: 520px; }
-  .weapon-img-container { height: 300px; }
-  .titulo { font-size: 2rem; margin-top: 20px; }
-  .volver-container.top-left { top: 8px; left: 8px; }
-  .slider-btn { width: 44px; height: 44px; font-size: 28px; }
-}
-
-/* Accesibilidad: foco visible */
-.select-btn:focus,
-.slider-btn:focus,
-.volver-btn:focus {
-  outline: 3px solid rgba(0,255,255,0.18);
-  outline-offset: 3px;
-}
-
-/* Ajustes finales para evitar que elementos background cubran tarjetas */
-.character-slider,
-.slider-viewport,
-.avatars-container,
-.character-card {
-  position: relative;
-}
-
-/* 🎯 Filtro por tipo de arma */
-.filtro-container {
+  cursor: pointer;
+  width: 55px;
+  height: 55px;
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
-  margin: 25px 0 10px;
-  z-index: 3;
-  position: relative;
+  transition: all 0.3s ease;
+  z-index: 5;
 }
 
-.filtro-label {
-  font-weight: bold;
-  font-size: 1.1rem;
-  color: #fff;
-  text-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+.slider-btn:hover {
+  background: cyan;
+  color: #000;
+  transform: translateY(-50%) scale(1.1);
 }
 
-.form-select {
-  background-color: rgba(0, 0, 0, 0.85);
-  color: #00ffff;
-  border: 2px solid #00ffff;
-  border-radius: 12px;
-  padding: 6px 14px;
-  font-weight: 600;
-  transition: 0.3s ease;
-  box-shadow: 0 0 10px rgba(0, 255, 255, 0.15);
+.prev-btn { left: 30px; }
+.next-btn { right: 30px; }
+
+/* Animaciones generales */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.form-select:hover {
-  border-color: #ff0000;
-  color: #ff0000;
-  box-shadow: 0 0 14px rgba(255, 0, 0, 0.25);
-  transform: scale(1.03);
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-
-.form-select:focus {
-  outline: none;
-  box-shadow: 0 0 16px rgba(0, 255, 255, 0.35);
-}
-

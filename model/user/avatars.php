@@ -36,12 +36,14 @@ if (!$currentAvatar) {
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="UTF-8">
   <title>Seleccionar Personaje</title>
   <link rel="stylesheet" href="../../css/personajes.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
+
 <body class="background">
 
   <div class="volver-container top-left">
@@ -52,12 +54,12 @@ if (!$currentAvatar) {
 
   <div class="character-slider">
     <button class="slider-btn prev-btn" id="prev-btn">&lt;</button>
-    
+
     <div class="slider-viewport">
       <div class="avatars-container" id="avatars-container">
         <?php foreach ($avatars as $avatar): ?>
           <div class="character-card <?= ($avatar['id_avatar'] == $currentAvatar) ? 'selected' : '' ?>">
-            
+
             <div class="weapon-img-container">
               <img class="weapon-img" src="../../<?= htmlspecialchars($avatar['image_url']) ?>" alt="<?= htmlspecialchars($avatar['name']) ?>">
             </div>
@@ -81,14 +83,14 @@ if (!$currentAvatar) {
     const sliderContainer = document.getElementById('avatars-container');
     const cards = document.querySelectorAll('.character-card');
     const totalCards = cards.length;
-    let currentIndex = 0; 
+    let currentIndex = 0;
 
     function getVisibleCards() {
       if (window.innerWidth <= 768) return 1;
       if (window.innerWidth <= 1100) return 2;
       return 3;
     }
-  
+
     function getStepSize() {
       const cardRect = cards[0].getBoundingClientRect();
       return cardRect.width + 25;
@@ -98,14 +100,14 @@ if (!$currentAvatar) {
       const VISIBLE_CARDS = getVisibleCards();
       const STEP_SIZE = getStepSize();
       if (currentIndex > totalCards - VISIBLE_CARDS) {
-          currentIndex = Math.max(0, totalCards - VISIBLE_CARDS);
+        currentIndex = Math.max(0, totalCards - VISIBLE_CARDS);
       }
-      const offset = -currentIndex * STEP_SIZE; 
+      const offset = -currentIndex * STEP_SIZE;
       sliderContainer.style.transform = `translateX(${offset}px)`;
       document.getElementById('prev-btn').disabled = (currentIndex === 0);
-      document.getElementById('next-btn').disabled = (currentIndex >= totalCards - VISIBLE_CARDS); 
+      document.getElementById('next-btn').disabled = (currentIndex >= totalCards - VISIBLE_CARDS);
     }
-  
+
     document.getElementById('next-btn').addEventListener('click', () => {
       if (currentIndex < totalCards - getVisibleCards()) {
         currentIndex++;
@@ -125,4 +127,5 @@ if (!$currentAvatar) {
   </script>
 
 </body>
+
 </html>
