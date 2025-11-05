@@ -383,7 +383,7 @@ $matchDuration = 5 * 60;
             checkFireStatus(); // Revisa el estado del botón después de cambiar de arma
         }
 
-        // Función para revisar el estado del botón (Cooldown y Balas)
+        // Función para revisar el estado del botón (Cooldown y Balas) No dispara a lo loco 
         function checkFireStatus() {
             const fireBtn = $("#fire-btn");
             const bulletsDisplay = $("#arma-bullets");

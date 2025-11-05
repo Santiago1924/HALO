@@ -74,7 +74,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <title>Registro | Halo Style</title>
     <link rel="stylesheet" href="controller/bootstrap/css/bootstrap.min.css">
     <script>
-        // Si el registro fue exitoso, redirigir al login luego de 3 segundos
+        // Si el registro fue exitoso, redirigir al login luego de 4 segundos
         function redirigirLogin() {
             setTimeout(function(){
                 window.location.href = "index.php";
@@ -87,10 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container-fluid h-100">
         <div class="row h-100">
 
-            <div class="col-md-6 d-flex flex-column justify-content-center align-items-center text-light p-5 position-relative">
-                <video autoplay muted loop class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; z-index: -1;">
-                    <source src="video/intro.mp4" type="video/mp4">
-                </video>
+            <div class="col-md-6 d-none d-md-flex flex-column justify-content-center align-items-center text-light p-5 position-relative">
+                <img src="img/mapas/login_fondo.png" alt="Fondo de Registro" class="position-absolute top-0 start-0 w-100 h-100" style="object-fit: cover; z-index: -1;">
             </div>
 
             <div class="col-md-6 d-flex flex-column justify-content-center align-items-center bg-light">
@@ -104,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     <?php if ($registro_exitoso): ?>
                         <div class="alert alert-success text-center">
-                            ✅ ¡Registro exitoso! Serás redirigido al inicio de sesión en 3 segundos...
+                            ✅ **¡Registro exitoso!** Serás redirigido al inicio de sesión en 4 segundos...
                         </div>
                     <?php else: ?>
                         <form method="POST" action="registrarse.php" autocomplete="off">
